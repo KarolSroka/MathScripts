@@ -3,11 +3,35 @@ class QuadraticFunction{
         this.canvas = document.querySelector('.graph');
         this.canvas.width = 99;
         this.canvas.height = 99;
+        this.canvasInitialSize = this.canvas.width;
         this.c = this.canvas.getContext('2d');
         this.graphCenter = {x: this.canvas.width / 2, y: this.canvas.height / 2};
+        this.zoom = 1;
+        this.zoomSpeed = 0.01;
+
+        this.data = {};
+
+        //DONE?
+        addEventListener('wheel', (e) => {
+            let scale = e.deltaY * this.zoomSpeed;
+            if(this.zoom + scale < 0.5)
+                return;
+            if(this.zoom + scale > 10)
+                return;
+            this.zoom += scale;
+            this.canvas.width = this.canvasInitialSize * this.zoom;
+            this.canvas.height = this.canvasInitialSize * this.zoom;
+            this.graphCenter = {x: this.canvas.width / 2, y: this.canvas.height / 2};
+            console.log('a?');
+
+            this.drawGraph(this.data.a, this.data.b, this.data.c);
+        })
     }
 
+    //DONE?
     drawGraph(a, b, c){
+        let amount = 1 * this.zoom;
+
         this.c.clearRect(0, 0, this.canvas.width, this.canvas.height);
         this.c.beginPath();
         this.c.moveTo(this.canvas.width / 2, 0);
@@ -98,6 +122,8 @@ class QuadraticFunction{
     }
 
     countQuadraticFunction(a, b, c){
+        this.data = {a: a, b: b, c: c};
+
         let delta = this.countDelta(a, b, c);
         let roots = this.countRoots(a, b, c);
         let canonicalForm = this.makeCanonicalForm(a, b, c);
