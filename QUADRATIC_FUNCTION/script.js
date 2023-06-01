@@ -22,7 +22,7 @@ class QuadraticFunction{
 
         this.c.beginPath();
         this.c.moveTo(this.graphCenter.x, this.graphCenter.y);
-        for(let x = 0; x >= -this.canvas.width / 2 / 2; x--){
+        for(let x = 0; x >= -this.canvas.width / 2; x--){
             let countedA = a * (x * x);
             let countedB = b * x;
             
