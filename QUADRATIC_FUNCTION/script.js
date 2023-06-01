@@ -5,64 +5,90 @@ class QuadraticFunction{
         this.canvas.height = 99;
         this.canvasInitialSize = this.canvas.width;
         this.c = this.canvas.getContext('2d');
-        this.graphCenter = {x: this.canvas.width / 2, y: this.canvas.height / 2};
-        this.zoom = 1;
-        this.zoomSpeed = 0.01;
 
         this.data = {};
 
+        this.graph = {
+            position: {
+                x: 0,
+                y: 0
+            },
+            zoom: 1,
+            zoomSpeed: 0.01,
+            center: {x: this.canvas.width / 2, y: this.canvas.height / 2}
+        }
         //DONE?
-        addEventListener('wheel', (e) => {
-            let scale = e.deltaY * this.zoomSpeed;
-            if(this.zoom + scale < 0.5)
-                return;
-            if(this.zoom + scale > 10)
-                return;
-            this.zoom += scale;
-            this.canvas.width = this.canvasInitialSize * this.zoom;
-            this.canvas.height = this.canvasInitialSize * this.zoom;
-            this.graphCenter = {x: this.canvas.width / 2, y: this.canvas.height / 2};
-            console.log('a?');
+        addEventListener('wheel', this.handleZoom);
+        addEventListener('keydown', this.handleGraphMovement);
+    }
 
-            this.drawGraph(this.data.a, this.data.b, this.data.c);
-        })
+    handleGraphMovement = (e) => {
+        console.log(this.graph.position);
+        switch(e.key){
+            case 'ArrowLeft':
+                this.graph.position.x -= 5;
+                break;
+            case 'ArrowRight':
+                this.graph.position.x += 5;
+                break;
+            case 'ArrowUp':
+                this.graph.position.y -= 5;
+                break;
+            case 'ArrowDown':
+                this.graph.position.y += 5;
+                break;
+        }
+        this.drawGraph(this.data.a, this.data.b, this.data.c);
+    }
+
+    handleZoom = (e) => {
+        let scale = e.deltaY * this.graph.zoomSpeed;
+        if(this.graph.zoom + scale < 0.5)
+            return;
+        if(this.graph.zoom + scale > 10)
+            return;
+        this.graph.zoom += scale;
+        this.canvas.width = this.canvasInitialSize * this.graph.zoom;
+        this.canvas.height = this.canvasInitialSize * this.graph.zoom;
+        this.graph.center = {x: this.canvas.width / 2, y: this.canvas.height / 2};
+
+        this.drawGraph(this.data.a, this.data.b, this.data.c);
     }
 
     //DONE?
     drawGraph(a, b, c){
-        let amount = 1 * this.zoom;
 
         this.c.clearRect(0, 0, this.canvas.width, this.canvas.height);
         this.c.beginPath();
-        this.c.moveTo(this.canvas.width / 2, 0);
-        this.c.lineTo(this.canvas.width / 2, this.canvas.height);
+        this.c.moveTo(this.canvas.width / 2 + this.graph.position.x, 0);
+        this.c.lineTo(this.canvas.width / 2 + this.graph.position.x, this.canvas.height);
         this.c.stroke();
         
         this.c.beginPath();
-        this.c.moveTo(0, this.canvas.height / 2);
-        this.c.lineTo(this.canvas.width, this.canvas.height / 2);
+        this.c.moveTo(0, this.canvas.height / 2 + this.graph.position.y);
+        this.c.lineTo(this.canvas.width, this.canvas.height / 2 + this.graph.position.y);
         this.c.stroke();
 
 
         this.c.beginPath();
-        this.c.moveTo(this.graphCenter.x, this.graphCenter.y);
+        this.c.moveTo(this.graph.center.x + this.graph.position.x, this.graph.center.y + this.graph.position.y);
         for(let x = 0; x >= -this.canvas.width / 2; x--){
             let countedA = a * (x * x);
             let countedB = b * x;
             
             let countedX = countedA + countedB + c;
-            this.c.lineTo(this.graphCenter.x + x, this.graphCenter.y - countedX);
+            this.c.lineTo(this.graph.center.x + x + this.graph.position.x, this.graph.center.y - countedX + this.graph.position.y);
         }
         this.c.stroke();
         
         this.c.beginPath();
-        this.c.moveTo(this.graphCenter.x, this.graphCenter.y);
+        this.c.moveTo(this.graph.center.x + this.graph.position.x, this.graph.center.y + this.graph.position.y);
         for(let x = 0 / 2; x < this.canvas.width / 2; x++){
             let countedA = a * (x * x);
             let countedB = b * x;
             
             let countedX = countedA + countedB + c;
-            this.c.lineTo(this.graphCenter.x + x, this.graphCenter.y - countedX);
+            this.c.lineTo(this.graph.center.x + x + this.graph.position.x, this.graph.center.y - countedX + this.graph.position.y);
         }
         this.c.stroke();
 
@@ -141,5 +167,3 @@ class QuadraticFunction{
         console.log(`Apex: q - ${apex.q}, p - ${apex.p}`);
     }
 }
-
-//ADD EVERYWHERE WHERE a != 0 return.
