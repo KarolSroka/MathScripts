@@ -103,7 +103,7 @@ class QuadraticFunction{
         this.drawGraph();
     }
 
-    //DONE?
+    
     drawGraph(){
         const a = this.data.a;
         const b = this.data.b;
@@ -144,6 +144,7 @@ class QuadraticFunction{
         this.c.stroke();
     }
 
+    //CLEAR
     countQuadraticFunction(){
         const a = this.data.a;
         const b = this.data.b;
