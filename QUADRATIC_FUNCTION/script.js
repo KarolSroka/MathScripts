@@ -1,10 +1,17 @@
+/*
+    TO DO:
+    1. CHANGE THE CONSTRUCTOR A LOT.
+*/
+
+
 class QuadraticFunction{
     constructor(){
+
+        this.calculateButton = document.querySelector('.calculate');
+        this.showButton = document.querySelector('.show-graph');
+        this.hideButton = document.querySelector('.close-graph');
+        this.dialog = document.querySelector('.graph-pop-up');
         this.canvas = document.querySelector('.graph');
-        this.canvas.width = 99;
-        this.canvas.height = 99;
-        this.canvasInitialSize = this.canvas.width;
-        this.c = this.canvas.getContext('2d');
 
         this.data = {};
 
@@ -14,64 +21,93 @@ class QuadraticFunction{
                 y: 0
             },
             zoom: 1,
-            zoomSpeed: 0.01,
-            center: {
-                x: this.canvas.width / 2,
-                y: this.canvas.height / 2
-            }
+            zoomSpeed: 0.01
         }
-        //DONE?
-        addEventListener('wheel', this.handleZoom);
-        addEventListener('keydown', this.handleGraphMovement);
+        this.canvas.width = 99;
+        this.canvas.height = 99;
+        this.c = this.canvas.getContext('2d');
+        this.canvasInitialSize = this.canvas.width;
 
-        document.querySelector('.calculate').addEventListener('click', () => {
-            let a = Number(document.querySelector('.a').value);
-            let b = Number(document.querySelector('.b').value);
-            let c = Number(document.querySelector('.c').value);
-            this.countQuadraticFunction(a, b, c);
-        })
-        document.querySelector('.show-graph').addEventListener('click', () => {
-            document.querySelector('#test').showModal();
-        })
-        document.querySelector('.close').addEventListener('click', () => {
-            document.querySelector('#test').close();
-        })
+        this.graph.center = {
+            x: this.canvas.width / 2,
+            y: this.canvas.height / 2
+        }
+
+        addEventListener('wheel', this.handleGraphZoom);
+        addEventListener('keydown', this.handleGraphMovement);
+        this.calculateButton.addEventListener('click', () => {this.initCalculations()});
+        this.showButton.addEventListener('click', () => {this.dialog.showModal()});
+        this.hideButton.addEventListener('click', () => {this.dialog.close()});
     }
 
+    initCalculations(){
+        const a = Number(document.querySelector('.a').value);
+        const b = Number(document.querySelector('.b').value);
+        const c = Number(document.querySelector('.c').value);
+
+        this.data = {a: a, b: b, c: c};
+
+        this.countQuadraticFunction();
+    }
+
+    //CLEAN
     handleGraphMovement = (e) => {
+
         switch(e.key){
+
             case 'ArrowLeft':
                 this.graph.position.x += 5;
                 break;
+
             case 'ArrowRight':
                 this.graph.position.x -= 5;
                 break;
+
             case 'ArrowUp':
                 this.graph.position.y += 5;
                 break;
+
             case 'ArrowDown':
-                this.graph.position.y = 5;
+                this.graph.position.y -= 5;
                 break;
+                
+            case 'r':
+                this.graph.position.y = 0;
+                this.graph.position.x = 0;
+                break;
+
         }
+
         this.drawGraph(this.data.a, this.data.b, this.data.c);
     }
 
-    handleZoom = (e) => {
+    //CLEAN
+    handleGraphZoom = (e) => {
         let scale = e.deltaY * this.graph.zoomSpeed;
+
         if(this.graph.zoom + scale < 0.5)
             return;
         if(this.graph.zoom + scale > 10)
             return;
+
         this.graph.zoom += scale;
+
         this.canvas.width = this.canvasInitialSize * this.graph.zoom;
         this.canvas.height = this.canvasInitialSize * this.graph.zoom;
-        this.graph.center = {x: this.canvas.width / 2, y: this.canvas.height / 2};
 
-        this.drawGraph(this.data.a, this.data.b, this.data.c);
+        this.graph.center = {
+            x: this.canvas.width / 2, 
+            y: this.canvas.height / 2
+        };
+
+        this.drawGraph();
     }
 
     //DONE?
-    drawGraph(a, b, c){
+    drawGraph(){
+        const a = this.data.a;
+        const b = this.data.b;
+        const c = this.data.c;
 
         this.c.clearRect(0, 0, this.canvas.width, this.canvas.height);
         this.c.beginPath();
@@ -106,32 +142,48 @@ class QuadraticFunction{
             this.c.lineTo(this.graph.center.x + x + this.graph.position.x, this.graph.center.y - countedX + this.graph.position.y);
         }
         this.c.stroke();
-
     }
 
-    //DONE CLEAR
+    countQuadraticFunction(){
+        const a = this.data.a;
+        const b = this.data.b;
+        const c = this.data.c;
+
+        let delta = this.countDelta(a, b, c);
+        let roots = this.countRoots(a, b, c);
+        let apex = this.countApex(a, b, c);
+
+        this.drawGraph();
+
+        document.querySelector('.form').textContent = `Function: ${a}x² + ${b}x + ${c}`;
+        document.querySelector('.canonical-form').textContent = `Canonical Form: ${this.makeCanonicalForm(a, b, c)}`;
+        document.querySelector('.intercept-form').textContent = `Intercept Form: ${this.makeInterceptForm(a, b, c)}`;
+        document.querySelector('.delta').textContent = `Delta: ${delta}`;
+        document.querySelector('.roots').textContent = `Roots: ${roots.one}, ${roots.two}`;
+        document.querySelector('.apex').textContent = `Apex: q - ${apex.q}, p - ${apex.p}`;
+    }
+
+    //CLEAR
     countDelta(a, b,c){
         return b * b - 4 * a * c;
     }
 
-    //DONE CLEAR
+    //CLEAR
     countRoots(a, b, c){
         let delta = this.countDelta(a, b, c);
 
         if(delta < 0)
             return {one: 'No', two: 'No'};
-        if(delta === 0){
+        if(delta === 0)
             return {one: -b / (2 * a), two: 'No'};
-        }
-        if(delta > 0){
+        if(delta > 0)
             return {
                 one: (-b - Math.sqrt(delta)) / (2 * a), 
                 two: (-b + Math.sqrt(delta)) / (2 * a)
             };
-        }
     }
 
-    //DONE CLEAR
+    //CLEAR
     makeCanonicalForm(a, b, c){
         if(a === 0)
             return;
@@ -140,7 +192,7 @@ class QuadraticFunction{
         return `${a}(x - ${apex.p})² + ${apex.q}`;
     }
 
-    //DONE
+    //CLEAR
     makeInterceptForm(a, b, c){
         if(a === 0)
             return;
@@ -153,34 +205,13 @@ class QuadraticFunction{
             return `${a}(x - ${roots.one})(x - ${roots.two})`;
     }
 
-    //DONE
+    //CLEAR
     countApex(a, b, c){
         let delta = this.countDelta(a, b, c);
         return {
             p: -b / (2 * a), 
             q: -delta / (4 * a)
         };
-    }
-
-    countQuadraticFunction(a, b, c){
-        this.data = {a: a, b: b, c: c};
-
-        let delta = this.countDelta(a, b, c);
-        let roots = this.countRoots(a, b, c);
-        let canonicalForm = this.makeCanonicalForm(a, b, c);
-        let interceptForm = this.makeInterceptForm(a, b, c);
-        let apex = this.countApex(a, b, c);
-
-        this.drawGraph(a, b, c);
-        document.querySelector('#test').showModal();
-
-        document.querySelector('.data').textContent = `
-        Function: ${a}x² + ${b}x + ${c} /
-        Canonical Form: ${canonicalForm} /
-        Intercept Form: ${interceptForm} /
-        Delta: ${delta} /
-        Roots: ${roots.one}, ${roots.two} /
-        Apex: q - ${apex.q}, p - ${apex.p}`
     }
 }
 

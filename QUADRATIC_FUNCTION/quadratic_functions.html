@@ -3,44 +3,32 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <style>
-        body, html{
-            height: 100%;
-        }
-        body{
-            margin:0;
-            padding:0;
-            overflow: hidden;
-        }
-        canvas{
-            height: 90%;
-            width:100%;
-            max-height: 90%;
-            max-width: 100%;
-            image-rendering: pixelated;
-        }
-        dialog{
-            height: 90%;
-            margin: auto;
-        }
-        button{
-            width: 100%;
-        }
-    </style>
+    <link href="style.css" rel="stylesheet">
     <title>QUADRATIC FUNCTIONS</title>
 </head>
 <body>
+    <header>THE QUADRATIC FUNCTIONS</header>
+
     <p><input size="1" class="a">x² + <input size="1" class="b">x + <input size="1" class="c"></p>
     <div class="data">
-        
+        <p class="form"></p>
+        <p class="canonical-form"></p>
+        <p class="intercept-form"></p>
+        <p class="delta"></p>
+        <p class="roots"></p>
+        <p class="apex"></p>
     </div>
-    <button class="calculate">Math!</button>
-    <button class="show-graph">Show Graph</button>
+
+    <div class="bottom-buttons">
+        <button class="calculate">Math!</button>
+        <button class="show-graph">Show Graph</button>
+    </div>
     
-    <dialog id="test">
-        <button class="close">CLOSE</button>
+    <dialog class="graph-pop-up">
+        <button class="close-graph">CLOSE</button>
         <canvas class="graph"></canvas>
     </dialog>
+    
     <script src="script.js"></script>
 </body>
 </html>
