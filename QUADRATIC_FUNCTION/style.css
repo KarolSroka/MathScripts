@@ -25,6 +25,7 @@ dialog{
 button{
     width: 100%;
     background-color: #5a5a5a;
+    border: 1px solid rgb(20, 20, 20);
 }
 .bottom-buttons{
     width: 100%;
