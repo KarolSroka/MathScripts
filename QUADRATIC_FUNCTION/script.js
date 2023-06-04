@@ -1,6 +1,6 @@
 /*
     TO DO:
-    1. CHANGE THE CONSTRUCTOR A LOT.
+    1. SOMEHOW FIX DRAWGRAPG?
 */
 
 
@@ -110,6 +110,8 @@ class QuadraticFunction{
         const c = this.data.c;
 
         this.c.clearRect(0, 0, this.canvas.width, this.canvas.height);
+
+
         this.c.beginPath();
         this.c.moveTo(this.canvas.width / 2 + this.graph.position.x, 0);
         this.c.lineTo(this.canvas.width / 2 + this.graph.position.x, this.canvas.height);
