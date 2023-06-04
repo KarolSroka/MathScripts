@@ -202,6 +202,8 @@ class QuadraticFunction{
 
         let roots = this.countRoots(a, b, c);
 
+        if(roots.one === 'No')
+            return 'None';
         if(roots.two === 'No')
             return `${a}(x - ${roots.one})²`;
         if(roots.two !== 'No')
