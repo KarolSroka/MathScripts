@@ -1,9 +1,3 @@
-/*
-    TO DO:
-    1. SOMEHOW FIX DRAWGRAPG?
-*/
-
-
 class QuadraticFunction{
     constructor(){
 
@@ -81,7 +75,6 @@ class QuadraticFunction{
         this.drawGraph(this.data.a, this.data.b, this.data.c);
     }
 
-    //CLEAN
     handleGraphZoom = (e) => {
         let scale = e.deltaY * this.graph.zoomSpeed;
 
@@ -103,7 +96,6 @@ class QuadraticFunction{
         this.drawGraph();
     }
 
-    
     drawGraph(){
         const a = this.data.a;
         const b = this.data.b;
@@ -146,7 +138,6 @@ class QuadraticFunction{
         this.c.stroke();
     }
 
-    //CLEAR
     countQuadraticFunction(){
         const a = this.data.a;
         const b = this.data.b;
@@ -166,12 +157,10 @@ class QuadraticFunction{
         document.querySelector('.apex').textContent = `Apex: q - ${apex.q}, p - ${apex.p}`;
     }
 
-    //CLEAR
     countDelta(a, b,c){
         return b * b - 4 * a * c;
     }
 
-    //CLEAR
     countRoots(a, b, c){
         let delta = this.countDelta(a, b, c);
 
@@ -186,7 +175,6 @@ class QuadraticFunction{
             };
     }
 
-    //CLEAR
     makeCanonicalForm(a, b, c){
         if(a === 0)
             return;
@@ -195,7 +183,6 @@ class QuadraticFunction{
         return `${a}(x - ${apex.p})² + ${apex.q}`;
     }
 
-    //CLEAR
     makeInterceptForm(a, b, c){
         if(a === 0)
             return;
@@ -210,7 +197,6 @@ class QuadraticFunction{
             return `${a}(x - ${roots.one})(x - ${roots.two})`;
     }
 
-    //CLEAR
     countApex(a, b, c){
         let delta = this.countDelta(a, b, c);
         return {
